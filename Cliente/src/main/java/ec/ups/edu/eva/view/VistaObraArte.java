@@ -2,9 +2,6 @@ package ec.ups.edu.eva.view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,9 +16,15 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.awt.event.ActionEvent;
+import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
-public class CrearObra extends JFrame {
+public class VistaObraArte extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtCodigo;
@@ -29,13 +32,18 @@ public class CrearObra extends JFrame {
 	private JTextField txtAltura;
 	private JTextField txtDescripcion;
 	private static ObrasServiceSOAP port;
+	JTextArea textArea;
 	/**
 	 * Launch the application.
 	 */
 	
 	
 	private static final QName SERVICE_NAME = new QName("http://bean.eva.edu.ups.ec/", "ObrasServiceSOAPService");
-	
+
+
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
         URL wsdlURL = ObrasServiceSOAPService.WSDL_LOCATION;
         if (args.length > 0 && args[0] != null && !"".equals(args[0])) {
@@ -53,25 +61,22 @@ public class CrearObra extends JFrame {
         ObrasServiceSOAPService ss = new ObrasServiceSOAPService(wsdlURL, SERVICE_NAME);
          port = ss.getObrasServiceSOAPPort();
 
-        {
-
-
-        }
-        {
-        
-       
-        
-
-
-        }
-
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VistaObraArte frame = new VistaObraArte();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public CrearObra() {
-		
+	public VistaObraArte() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -79,41 +84,41 @@ public class CrearObra extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Codigo");
-		lblNewLabel.setBounds(33, 31, 45, 13);
-		contentPane.add(lblNewLabel);
+		JLabel Codigo = new JLabel("Codigo");
+		Codigo.setBounds(10, 32, 45, 13);
+		contentPane.add(Codigo);
 		
 		JLabel lblNombre = new JLabel("Nombre");
-		lblNombre.setBounds(33, 71, 45, 13);
+		lblNombre.setBounds(10, 64, 45, 13);
 		contentPane.add(lblNombre);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Altura");
-		lblNewLabel_1_1.setBounds(33, 119, 45, 13);
-		contentPane.add(lblNewLabel_1_1);
+		JLabel lblAltura = new JLabel("Altura");
+		lblAltura.setBounds(10, 107, 45, 13);
+		contentPane.add(lblAltura);
 		
-		JLabel lblNewLabel_1_1_1 = new JLabel("Descripcion");
-		lblNewLabel_1_1_1.setBounds(33, 160, 45, 13);
-		contentPane.add(lblNewLabel_1_1_1);
+		JLabel lblDescripcion = new JLabel("Descripcion");
+		lblDescripcion.setBounds(10, 152, 45, 13);
+		contentPane.add(lblDescripcion);
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(94, 28, 96, 19);
+		txtCodigo.setBounds(72, 29, 96, 19);
 		contentPane.add(txtCodigo);
 		txtCodigo.setColumns(10);
 		
 		txtNombre = new JTextField();
-		txtNombre.setBounds(94, 68, 96, 19);
-		contentPane.add(txtNombre);
 		txtNombre.setColumns(10);
+		txtNombre.setBounds(72, 61, 96, 19);
+		contentPane.add(txtNombre);
 		
 		txtAltura = new JTextField();
-		txtAltura.setBounds(88, 116, 96, 19);
-		contentPane.add(txtAltura);
 		txtAltura.setColumns(10);
+		txtAltura.setBounds(72, 104, 96, 19);
+		contentPane.add(txtAltura);
 		
 		txtDescripcion = new JTextField();
-		txtDescripcion.setBounds(88, 157, 96, 19);
-		contentPane.add(txtDescripcion);
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setBounds(72, 149, 96, 19);
+		contentPane.add(txtDescripcion);
 		
 		JButton btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
@@ -121,10 +126,25 @@ public class CrearObra extends JFrame {
 				ObtenerDatos();
 			}
 		});
-		btnGuardar.setBounds(87, 201, 85, 21);
+		btnGuardar.setBounds(53, 199, 85, 21);
 		contentPane.add(btnGuardar);
+		
+		JButton btnListar = new JButton("Listar");
+		btnListar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			ListarObras();
+			}
+		});
+		btnListar.setBounds(263, 199, 85, 21);
+		contentPane.add(btnListar);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(233, 46, 193, 119);
+		contentPane.add(scrollPane);
+		
+		 textArea = new JTextArea();
+		scrollPane.setViewportView(textArea);
 	}
-	
 	public void ObtenerDatos() {
 		Obra o = new Obra();
 		
@@ -141,5 +161,12 @@ public class CrearObra extends JFrame {
 		
         java.lang.String _crearContacto__return = port.crearContacto(o);
 		
+	}
+	public void ListarObras() {
+        java.util.List<ec.ups.edu.eva.EVA_Barzallo_Xavier_CLI.Obra> getContactos= port.getContactos();
+        
+        for(int i=0;i<getContactos.size();i++) {
+        	textArea.append(getContactos.toString()+"\n");
+        }
 	}
 }

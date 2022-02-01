@@ -60,6 +60,7 @@ public final class ObrasServiceSOAP_ObrasServiceSOAPPort_Client {
         System.out.println("Invoking crearContacto...");
         ec.ups.edu.eva.EVA_Barzallo_Xavier_CLI.Obra _crearContacto_arg0 = null;
         
+       
         
         
         java.lang.String _crearContacto__return = port.crearContacto(_crearContacto_arg0);
